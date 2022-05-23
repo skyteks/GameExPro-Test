@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TikTakToe : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class TikTakToe : MonoBehaviour
     public bool playersTurn = true;
 
     private FieldStates[,] fields = new FieldStates[3, 3];
+
+    public UnityEvent<string> onWinCondition;
 
     public IList<Vector2Int> GetFreeCells()
     {
