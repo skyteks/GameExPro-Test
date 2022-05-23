@@ -13,6 +13,7 @@ public class TikTakToe : MonoBehaviour
     }
 
     public bool playersTurn = true;
+    public bool gameOver;
 
     private FieldStates[,] fields = new FieldStates[3, 3];
 
@@ -40,6 +41,10 @@ public class TikTakToe : MonoBehaviour
         {
             throw new System.ArgumentException("This cell has already been marked");
         }
+        if (gameOver)
+        {
+            return;
+        }
 
         fields[cellPos.x, cellPos.y] = playersTurn ? FieldStates.Player : FieldStates.AI;
 
@@ -51,8 +56,9 @@ public class TikTakToe : MonoBehaviour
         FieldStates winner = CheckForWinner();
         if (winner != FieldStates.Empty)
         {
+            gameOver = true;
             Debug.Log(winner + " is the winner");
-            return;
+            onWinCondition.Invoke(winner.ToString());
         }
 
         playersTurn = !playersTurn;
@@ -94,7 +100,12 @@ public class TikTakToe : MonoBehaviour
         return cell1 != FieldStates.Empty && cell1 == cell2 && cell2 == cell3;
     }
 
-    private FieldStates GetCell(Vector2Int cellPos)
+    public FieldStates GetCell(int x, int y)
+    {
+        return GetCell(new Vector2Int(x, y));
+    }
+
+    public FieldStates GetCell(Vector2Int cellPos)
     {
         if (cellPos.x < 0 || cellPos.y < 0 || cellPos.x > 2 || cellPos.y > 2)
         {
@@ -103,8 +114,10 @@ public class TikTakToe : MonoBehaviour
         return fields[cellPos.x, cellPos.y];
     }
 
-    private void Reset()
+    public void Reset()
     {
+        gameOver = false;
+        playersTurn = true;
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
