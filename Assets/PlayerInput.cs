@@ -20,7 +20,7 @@ public class PlayerInput : MonoBehaviour
             robot.SetNextPos(robot.lastPos + new Vector2Int(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y)));
         }
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && !robot.isMoving)
         {
             robot.PlaceStone();
         }

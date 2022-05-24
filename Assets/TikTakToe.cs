@@ -14,6 +14,7 @@ public class TikTakToe : MonoBehaviour
 
     public bool playersTurn = true;
     public bool gameOver;
+    private int turn;
 
     private FieldStates[,] fields = new FieldStates[3, 3];
 
@@ -60,7 +61,12 @@ public class TikTakToe : MonoBehaviour
             Debug.Log(winner + " is the winner");
             onWinCondition.Invoke(winner.ToString());
         }
-
+        turn++;
+        if (turn >= 9)
+        {
+            gameOver = true;
+            Debug.Log("no winner");
+        }
         playersTurn = !playersTurn;
     }
 
@@ -116,6 +122,7 @@ public class TikTakToe : MonoBehaviour
 
     public void Reset()
     {
+        turn = 1;
         gameOver = false;
         playersTurn = true;
         for (int x = 0; x < 3; x++)

@@ -16,7 +16,7 @@ public class BotInput : MonoBehaviour
             return;
         }
 
-        if (waitRoutine == null)
+        if (!robot.isMoving && waitRoutine == null)
         {
             MakeMove();
         }
@@ -24,32 +24,33 @@ public class BotInput : MonoBehaviour
 
     private void MakeMove()
     {
-        Vector2Int? move = null;
+        Vector2Int? cell = null;
 
-        move = LookForWinOrBlock(TikTakToe.FieldStates.AI);
-        if (move == null)
+        cell = LookForWinOrBlock(TikTakToe.FieldStates.AI);
+        if (cell == null)
         {
-            move = LookForWinOrBlock(TikTakToe.FieldStates.Player);
-            if (move == null)
+            cell = LookForWinOrBlock(TikTakToe.FieldStates.Player);
+            if (cell == null)
             {
-                move = LookForCorner();
-                if (move == null)
+                cell = LookForCorner();
+                if (cell == null)
                 {
-                    move = LookForOpenSpace();
+                    cell = LookForOpenSpace();
                 }
             }
         }
-
-        robot.SetNextPos(move.Value);
+        if (!cell.HasValue)
+        {
+            throw new System.Exception("No cell found. This should not be possible.");
+        }
+        robot.SetNextPos(cell.Value);
         waitRoutine = StartCoroutine(WaitToPlace());
     }
 
     IEnumerator WaitToPlace()
     {
-        while (!robot.PlaceStone())
-        {
-            yield return null;
-        }
+        yield return new WaitWhile(() => robot.isMoving);
+        robot.PlaceStone();
         waitRoutine = null;
     }
 

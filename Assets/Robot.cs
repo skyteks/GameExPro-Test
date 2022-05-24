@@ -24,8 +24,25 @@ public class Robot : MonoBehaviour
     public Vector2Int lastPos { get; private set; }
 
     private Coroutine movingRoutine;
+    public bool isMoving => movingRoutine != null;
 
     private List<GameObject> stones = new List<GameObject>();
+
+    void Awake()
+    {
+        Reset();
+        MoveToPickup();
+    }
+
+    void Reset()
+    {
+        tikTakToe.Reset();
+        foreach (var instance in stones)
+        {
+            Destroy(instance);
+        }
+        stones.Clear();
+    }
 
     public void SetNextPos(Vector2Int pos)
     {
@@ -67,26 +84,23 @@ public class Robot : MonoBehaviour
         movingRoutine = null;
     }
 
-    public bool PlaceStone()
+    public void PlaceStone()
     {
-        if (movingRoutine != null)
+        if (isMoving)
         {
-            return false;
+            throw new System.Exception();
         }
 
-        tikTakToe.SetCell(nextPos);
         Transform cell = cells[nextPos.x + nextPos.y * 3];
         stones.Add(Instantiate(stonePrefab[tikTakToe.playersTurn ? 0 : 1], cell.position, Quaternion.identity, cell));
-        return true;
+        tikTakToe.SetCell(nextPos);
+
+        MoveToPickup();
     }
 
-    public void Reset()
+    private void MoveToPickup()
     {
-        tikTakToe.Reset();
-        foreach (var instance in stones)
-        {
-            Destroy(instance);
-        }
-        stones.Clear();
+        Vector2Int start = tikTakToe.playersTurn ? new Vector2Int(-1, 1) : new Vector2Int(3, 1);
+        SetNextPos(start);
     }
 }
