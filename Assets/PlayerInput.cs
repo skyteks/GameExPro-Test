@@ -9,18 +9,23 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (!tikTakToe.playersTurn || tikTakToe.gameOver)
+        if (!tikTakToe.playersTurn || tikTakToe.gameOver || robot.isMoving)
         {
             return;
         }
 
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), -Input.GetAxis("Vertical"));
-        if (input.sqrMagnitude > 0f)
+        Vector2Int move = new Vector2Int(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y));
+        if (move.sqrMagnitude > 0)
         {
-            robot.SetNextPos(robot.lastPos + new Vector2Int(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y)));
+            Vector2Int cell = robot.lastPos + move;
+            if (cell.x >= 0 && cell.x < 3)
+            {
+                robot.SetNextPos(cell, false);
+            }
         }
 
-        if (Input.GetButtonDown("Jump") && !robot.isMoving)
+        if (Input.GetButtonDown("Jump"))
         {
             robot.PlaceStone();
         }

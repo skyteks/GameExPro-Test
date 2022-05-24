@@ -40,7 +40,7 @@ public class TikTakToe : MonoBehaviour
     {
         if (GetCell(cellPos) != FieldStates.Empty)
         {
-            throw new System.ArgumentException("This cell has already been marked");
+            return;
         }
         if (gameOver)
         {
@@ -62,7 +62,7 @@ public class TikTakToe : MonoBehaviour
             onWinCondition.Invoke(winner.ToString());
         }
         turn++;
-        if (turn >= 9)
+        if (turn >= 9 && winner == FieldStates.Empty)
         {
             gameOver = true;
             Debug.Log("no winner");

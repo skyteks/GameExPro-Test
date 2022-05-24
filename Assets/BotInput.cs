@@ -11,17 +11,18 @@ public class BotInput : MonoBehaviour
 
     void Update()
     {
-        if (tikTakToe.playersTurn || tikTakToe.gameOver)
+        if (tikTakToe.playersTurn || tikTakToe.gameOver || robot.isMoving)
         {
             return;
         }
 
-        if (!robot.isMoving && waitRoutine == null)
+        if (waitRoutine == null)
         {
             MakeMove();
         }
     }
 
+    /// AI Logic from https://pastebin.com/ZwGeLQqi https://youtu.be/6CM5x4B6BKA
     private void MakeMove()
     {
         Vector2Int? cell = null;
@@ -43,7 +44,7 @@ public class BotInput : MonoBehaviour
         {
             throw new System.Exception("No cell found. This should not be possible.");
         }
-        robot.SetNextPos(cell.Value);
+        robot.SetNextPos(cell.Value, false);
         waitRoutine = StartCoroutine(WaitToPlace());
     }
 
@@ -67,7 +68,6 @@ public class BotInput : MonoBehaviour
                 }
             }
         }
-
         return null;
     }
 
