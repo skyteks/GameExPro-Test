@@ -19,6 +19,12 @@ public class TikTakToe : MonoBehaviour
     private FieldStates[,] fields = new FieldStates[3, 3];
 
     public UnityEvent<int> onWinCondition;
+    public UnityEvent<int> onTurnEnd;
+
+    void Start()
+    {
+        onTurnEnd?.Invoke((int)(playersTurn ? FieldStates.Player : FieldStates.AI));
+    }
 
     public IList<Vector2Int> GetFreeCells()
     {
@@ -59,7 +65,7 @@ public class TikTakToe : MonoBehaviour
         {
             gameOver = true;
             Debug.Log(winner + " is the winner");
-            onWinCondition.Invoke((int)winner);
+            onWinCondition?.Invoke((int)winner);
         }
         turn++;
         if (turn >= 9 && winner == FieldStates.Empty)
@@ -68,6 +74,7 @@ public class TikTakToe : MonoBehaviour
             Debug.Log("no winner");
         }
         playersTurn = !playersTurn;
+        onTurnEnd?.Invoke((int)(playersTurn ? FieldStates.Player : FieldStates.AI));
     }
 
     private FieldStates CheckForWinner()

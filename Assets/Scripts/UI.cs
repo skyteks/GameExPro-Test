@@ -8,6 +8,8 @@ public class UI : MonoBehaviour
 {
     [SerializeField]
     private Text winnerText;
+    [SerializeField]
+    private Text turnText;
 
     private void Awake()
     {
@@ -28,6 +30,12 @@ public class UI : MonoBehaviour
                 winnerText.text = string.Concat(winner.ToString(), " wins!");
                 break;
         }
+    }
+
+    public void SetTurn(int value)
+    {
+        TikTakToe.FieldStates turn = (TikTakToe.FieldStates)value;
+        turnText.text = string.Concat("Turn: ", turn.ToString());
     }
 
     public void Restart()
