@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class TikTakToe : MonoBehaviour
 {
-    public enum FieldStates
+    public enum FieldStates : int
     {
         Empty,
         Player,
@@ -18,7 +18,7 @@ public class TikTakToe : MonoBehaviour
 
     private FieldStates[,] fields = new FieldStates[3, 3];
 
-    public UnityEvent<string> onWinCondition;
+    public UnityEvent<int> onWinCondition;
 
     public IList<Vector2Int> GetFreeCells()
     {
@@ -59,7 +59,7 @@ public class TikTakToe : MonoBehaviour
         {
             gameOver = true;
             Debug.Log(winner + " is the winner");
-            onWinCondition.Invoke(winner.ToString());
+            onWinCondition.Invoke((int)winner);
         }
         turn++;
         if (turn >= 9 && winner == FieldStates.Empty)
